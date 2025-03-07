@@ -1,0 +1,128 @@
+openapi: 3.0.0
+info:
+  title: User & Proxy Service API
+  version: 1.0.0
+paths:
+  /api/v1/auth/register:
+    post:
+      summary: Регистрация нового пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '200':
+          description: Успешная регистрация
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOut'
+  /api/v1/auth/login:
+    post:
+      summary: Аутентификация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Успешная авторизация
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+  /api/v1/users/profile:
+    get:
+      summary: Получение профиля
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Полные данные профиля
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOut'
+    put:
+      summary: Обновление профиля
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Обновлённый профиль
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOut'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserCreate:
+      type: object
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+    LoginRequest:
+      type: object
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+    UserUpdate:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        birth_date:
+          type: string
+        phone:
+          type: string
+    UserOut:
+      type: object
+      properties:
+        id:
+          type: integer
+        login:
+          type: string
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        birth_date:
+          type: string
+        phone:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    Token:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
